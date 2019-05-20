@@ -591,11 +591,21 @@ for test in TEST_CASES:
         new_test.is_backprop_two_phase = True
         new_tests.append(new_test)
 
-    if test.name == 'ch2o_model_MLP_with_loss_backprop':
-        new_test = copy.copy(test)
-        new_test.name = test.name + '_computation_order'
-        new_test.computation_order = 'dummy'
-        new_tests.append(new_test)
+    for is_two_phase in [False, True]:
+        if ('_For_' not in test.name and
+            '_If_' not in test.name and
+            '_EspNet_' not in test.name and
+            'LSTM_' not in test.name and
+            '_for_' not in test.name and
+            '_pad_' not in test.name and
+            '_loop' not in test.name):
+            new_test = copy.copy(test)
+            new_test.name = test.name + '_computation_order'
+            new_test.computation_order = 'dummy'
+            if is_two_phase:
+                new_test.name += '_two_phase'
+                new_test.is_backprop_two_phase = True
+            new_tests.append(new_test)
 
 for test in new_tests:
     TEST_CASES.append(test)
